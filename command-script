@@ -11,6 +11,8 @@ timestamp=`date +%s`
 slack_webhook_url="$SLACK_WEBHOOK_URL"
 tmp_filename="tmp-jira-tickets-$timestamp.txt"
 
+git config --global --add safe.directory /github/workspace
+
 # Get the number of commits since last tag
 prev_tag=`git rev-list --tags --no-walk --max-count=1`
 echo "previous tag: $prev_tag"
@@ -30,7 +32,7 @@ if [ ! -f "$tmp_filename" ]; then
 fi
 
 # Send a Slack webhook
-header="*$product_name* deploy completed!\n\nJIRA Tickets Mentioned:"
+header="*$product_name* deploy completed!\n\n"
 payload=`< $tmp_filename sed '/^[ \t]*$/d' | paste -sd "\\n" -`
 
 echo `$header\n$payload $empty_message`
