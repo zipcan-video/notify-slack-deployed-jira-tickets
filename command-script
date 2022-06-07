@@ -25,17 +25,18 @@ git log --pretty=format:"%s" -n $num_commits \
     | sort -t: -u -k1,1 \
     | while read -r t ; do echo -e "• $t (https://$JIRA_PREFIX.atlassian.net/browse/$t)" >> $tmp_filename ; done
 
-empty_message=''
+payload=''
 if [ ! -f "$tmp_filename" ]; then
   echo 'No JIRA tickets detected since last commit with tag.'
-  empty_message='No JIRA tickets detected since last commit with tag.'
+  payload='>No JIRA tickets detected since last commit with tag.'
+else
+  payload=`< $tmp_filename sed '/^[ \t]*$/d' | paste -sd "\\n" -`
 fi
 
 # Send a Slack webhook
-header="*$product_name* deploy completed!\n\n"
-payload=`< $tmp_filename sed '/^[ \t]*$/d' | paste -sd "\\n" -`
+header="> *$product_name* deploy completed\n"
 
-echo `$header\n$payload $empty_message`
+echo `$header\n$payload`
 
 curl -X POST --data-urlencode "payload={\"text\": \"$header\n$payload $empty_message\"}" $slack_webhook_url
 
