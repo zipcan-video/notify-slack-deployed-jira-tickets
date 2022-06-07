@@ -23,12 +23,14 @@ git log --pretty=format:"%s" -n $num_commits \
 
 if [ ! -f "$tmp_filename" ]; then
   echo 'No JIRA tickets detected since last tag.'
-  exit 0
 fi
 
 # Send a Slack webhook
 header="> <!here> *$product_name has been updated!*\n>*JIRA Tickets Mentioned <!date^$timestamp^- {date_long_pretty} {time}|just now>*\n"
 payload=`< $tmp_filename sed '/^[ \t]*$/d' | paste -sd "\\n" -`
+
+echo 'payload={\"text\": \"$header\n$payload\"}'
+
 curl -X POST --data-urlencode "payload={\"text\": \"$header\n$payload\"}" $slack_webhook_url
 
 # Cleanup, remove the temporary file
