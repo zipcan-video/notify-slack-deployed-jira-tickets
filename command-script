@@ -13,7 +13,9 @@ tmp_filename="tmp-jira-tickets-$timestamp.txt"
 
 # Get the number of commits since last tag
 prev_tag=`git rev-list --tags --no-walk --max-count=1`
+echo `previous tag: $prev_tag`
 num_commits=`git rev-list $prev_tag..HEAD --count`
+echo `chec last $num_commits commits`
 
 # Get a list of all the JIRA tickets since
 git log --pretty=format:"%s" -n $num_commits \
@@ -21,17 +23,19 @@ git log --pretty=format:"%s" -n $num_commits \
     | sort -t: -u -k1,1 \
     | while read -r t ; do echo -e "• $t (https://$JIRA_PREFIX.atlassian.net/browse/$t)" >> $tmp_filename ; done
 
+empty_message=''
 if [ ! -f "$tmp_filename" ]; then
   echo 'No JIRA tickets detected since last commit with tag.'
+  empty_message='No JIRA tickets detected since last commit with tag.'
 fi
 
 # Send a Slack webhook
-header="*$product_name deploy completed!*\nJIRA Tickets Mentioned: \n"
+header="*$product_name* deploy completed!\n/nJIRA Tickets Mentioned: \n"
 payload=`< $tmp_filename sed '/^[ \t]*$/d' | paste -sd "\\n" -`
 
-echo 'payload message: $header\n$payload'
+echo `$header\n$payload $empty_message`
 
-curl -X POST --data-urlencode "payload={\"text\": \"$header\n$payload\"}" $slack_webhook_url
+curl -X POST --data-urlencode "payload={\"text\": \"$header\n$payload $empty_message\"}" $slack_webhook_url
 
 # Cleanup, remove the temporary file
 rm $tmp_filename
