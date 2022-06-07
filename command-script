@@ -13,9 +13,9 @@ tmp_filename="tmp-jira-tickets-$timestamp.txt"
 
 # Get the number of commits since last tag
 prev_tag=`git rev-list --tags --no-walk --max-count=1`
-echo 'previous tag: '.$prev_tag
+echo "previous tag: $prev_tag"
 num_commits=`git rev-list $prev_tag..HEAD --count`
-echo 'check last '.$num_commits.'commits'
+echo "check last $num_commits commits"
 
 # Get a list of all the JIRA tickets since
 git log --pretty=format:"%s" -n $num_commits \
