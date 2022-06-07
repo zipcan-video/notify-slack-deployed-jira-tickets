@@ -34,9 +34,9 @@ else
 fi
 
 # Send a Slack webhook
-header="> *$product_name* deploy completed\n"
+header="> *$product_name* deploy completed"
 
-echo `$header\n$payload`
+echo "$header\n$payload"
 
 curl -X POST --data-urlencode "payload={\"text\": \"$header\n$payload $empty_message\"}" $slack_webhook_url
 
