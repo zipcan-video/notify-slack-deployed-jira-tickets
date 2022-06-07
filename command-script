@@ -37,5 +37,3 @@ echo `$header\n$payload $empty_message`
 
 curl -X POST --data-urlencode "payload={\"text\": \"$header\n$payload $empty_message\"}" $slack_webhook_url
 
-# Cleanup, remove the temporary file
-rm $tmp_filename
