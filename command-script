@@ -11,7 +11,7 @@ timestamp=`date +%s`
 slack_webhook_url="$SLACK_WEBHOOK_URL"
 tmp_filename="tmp-jira-tickets-$timestamp.txt"
 
-git config --global --add safe.directory /github/workspace
+#git config --global --add safe.directory /github/workspace
 
 list_tag=`git rev-list --tags`
 echo "list tags: $list_tag"
