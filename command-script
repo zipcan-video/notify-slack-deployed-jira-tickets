@@ -13,6 +13,9 @@ tmp_filename="tmp-jira-tickets-$timestamp.txt"
 
 git config --global --add safe.directory /github/workspace
 
+list_tag=`git rev-list --tags`
+echo "list tags: $list_tag"
+
 # Get the number of commits since last tag
 prev_tag=`git rev-list --tags --no-walk --max-count=1`
 echo "previous tag: $prev_tag"
