@@ -24,7 +24,7 @@ echo "check last $num_commits commits"
 git log --pretty=format:"%s" -n $num_commits \
     | grep -o [A-Z]+-[0-9]+ -E \
     | sort -t: -u -k1,1 \
-    | while read -r t ; do echo -e "> • $t (https://$JIRA_PREFIX.atlassian.net/browse/$t)" >> $tmp_filename ; done
+    | while read -r t ; do echo -e "> • <https://$JIRA_PREFIX.atlassian.net/browse/$t|$t>" >> $tmp_filename ; done
 
 payload=''
 if [ ! -f "$tmp_filename" ]; then
