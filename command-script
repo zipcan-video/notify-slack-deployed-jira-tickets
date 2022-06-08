@@ -12,16 +12,7 @@ slack_webhook_url="$SLACK_WEBHOOK_URL"
 github_workspace="$GITHUB_WORKSPACE"
 tmp_filename="tmp-jira-tickets-$timestamp.txt"
 
-echo "github_workspace: $github_workspace"
-
-git --version
 git config --global --add safe.directory /github/workspace
-git config user.name "GitHub Actions Bot"
-git config user.email "<>"
-git rev-list --tags
-
-list_tag=`git rev-list --tags`
-echo "list tags: $list_tag"
 
 # Get the number of commits since last tag
 prev_tag=`git rev-list --tags --no-walk --max-count=1`
@@ -33,7 +24,7 @@ echo "check last $num_commits commits"
 git log --pretty=format:"%s" -n $num_commits \
     | grep -o [A-Z]+-[0-9]+ -E \
     | sort -t: -u -k1,1 \
-    | while read -r t ; do echo -e "• $t (https://$JIRA_PREFIX.atlassian.net/browse/$t)" >> $tmp_filename ; done
+    | while read -r t ; do echo -e "> • $t (https://$JIRA_PREFIX.atlassian.net/browse/$t)" >> $tmp_filename ; done
 
 payload=''
 if [ ! -f "$tmp_filename" ]; then
