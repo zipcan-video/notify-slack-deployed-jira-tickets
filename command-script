@@ -9,7 +9,10 @@
 product_name=${PRODUCT_NAME:-Product}
 timestamp=`date +%s`
 slack_webhook_url="$SLACK_WEBHOOK_URL"
+github_workspace="$GITHUB_WORKSPACE"
 tmp_filename="tmp-jira-tickets-$timestamp.txt"
+
+echo "github_workspace: $github_workspace"
 
 git --version
 git config --global --add safe.directory /github/workspace
