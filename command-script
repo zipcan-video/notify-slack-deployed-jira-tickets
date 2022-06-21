@@ -10,6 +10,7 @@ product_name=${PRODUCT_NAME:-Product}
 timestamp=`date +%s`
 slack_webhook_url="$SLACK_WEBHOOK_URL"
 github_workspace="$GITHUB_WORKSPACE"
+github_actor="$GITHUB_ACTOR"
 tmp_filename="tmp-jira-tickets-$timestamp.txt"
 
 git config --global --add safe.directory /github/workspace
@@ -35,7 +36,7 @@ else
 fi
 
 # Send a Slack webhook
-header="> *$product_name* deploy completed"
+header="> *$product_name* deploy completed by $github_actor"
 
 echo "$header\n$payload"
 
