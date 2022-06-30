@@ -23,14 +23,14 @@ num_commits=`git rev-list $prev_tag..HEAD --count`
 echo "check last $num_commits commits"
 
 # Get a list of all the JIRA tickets since
-git log --pretty=format:"%s" -n 3 \
+git log --pretty=format:"%s" -n $num_commits \
   | grep -o [A-Z]+-[0-9]+ -E \
   | sort -t: -u -k1,1 \
-  | while read -r t ; do url="https://teamworkclients.atlassian.net/rest/api/3/issue/$t?fields=summary"; n=`curl --request GET \
+  | while read -r t ; do url="https://$JIRA_PREFIX.atlassian.net/rest/api/3/issue/$t?fields=summary"; n=`curl --request GET \
   --url $url \
   --user $token \
   --header 'Accept: application/json' \
-  | grep -o '"summary":"[^"]*' | grep -o '[^"]*$'` ; echo -e "> • <https://HITDEV.atlassian.net/browse/$t|$t - $n>" >> test.txt ; done
+  | grep -o '"summary":"[^"]*' | grep -o '[^"]*$'` ; echo -e "> • <https://$JIRA_PREFIX.atlassian.net/browse/$t|$t - $n>" >> $tmp_filename ; done
 
 payload=''
 if [ ! -f "$tmp_filename" ]; then
