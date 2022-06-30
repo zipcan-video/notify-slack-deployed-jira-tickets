@@ -11,6 +11,7 @@ timestamp=`date +%s`
 slack_webhook_url="$SLACK_WEBHOOK_URL"
 github_workspace="$GITHUB_WORKSPACE"
 github_actor="$GITHUB_ACTOR"
+token="$TOKEN"
 tmp_filename="tmp-jira-tickets-$timestamp.txt"
 
 git config --global --add safe.directory /github/workspace
@@ -22,10 +23,14 @@ num_commits=`git rev-list $prev_tag..HEAD --count`
 echo "check last $num_commits commits"
 
 # Get a list of all the JIRA tickets since
-git log --pretty=format:"%s" -n $num_commits \
-    | grep -o [A-Z]+-[0-9]+ -E \
-    | sort -t: -u -k1,1 \
-    | while read -r t ; do echo -e "> • <https://$JIRA_PREFIX.atlassian.net/browse/$t|$t>" >> $tmp_filename ; done
+git log --pretty=format:"%s" -n 3 \
+  | grep -o [A-Z]+-[0-9]+ -E \
+  | sort -t: -u -k1,1 \
+  | while read -r t ; do url="https://teamworkclients.atlassian.net/rest/api/3/issue/$t?fields=summary"; n=`curl --request GET \
+  --url $url \
+  --user $token \
+  --header 'Accept: application/json' \
+  | grep -o '"summary":"[^"]*' | grep -o '[^"]*$'` ; echo -e "> • <https://HITDEV.atlassian.net/browse/$t|$t - $n>" >> test.txt ; done
 
 payload=''
 if [ ! -f "$tmp_filename" ]; then
