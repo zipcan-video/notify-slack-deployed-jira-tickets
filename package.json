@@ -1,6 +1,6 @@
 {
   "name": "notify-slack-deployed-jira-tickets",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "GitHub Action to notify Slack when JIRA tickets have been deployed.",
   "main": "index.js",
   "scripts": {
